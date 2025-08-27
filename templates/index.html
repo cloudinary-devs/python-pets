@@ -47,7 +47,17 @@
     {% for it in items %}
     <div class="card">
       <a href="{{ it.full }}" target="_blank" rel="noopener">
-        <img class="thumb" src="{{ it.thumb }}" alt="{{ it.public_id }}" loading="lazy">
+        <img
+          class="thumb"
+          src="{{ it.thumb }}"
+          srcset="
+            {{ it.thumb | replace('w_400','w_200') }} 200w,
+            {{ it.thumb }} 400w,
+            {{ it.thumb | replace('w_400','w_800') }} 800w"
+          sizes="(max-width: 480px) 200px, (max-width: 900px) 400px, 800px"
+          alt="{{ it.name }}"
+          loading="lazy"
+        >
       </a>
       <div class="meta">
         {% if it.tags and it.tags|length > 0 %}
