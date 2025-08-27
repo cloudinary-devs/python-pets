@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 import cloudinary
 from cloudinary import CloudinaryImage
 
+
 load_dotenv()
 
 cloudinary.config(cloudinary_url=os.getenv("CLOUDINARY_URL"), secure=True)
@@ -17,7 +18,7 @@ app = Flask(__name__)
 def _thumb_url(public_id):
     return CloudinaryImage(public_id).build_url(
         transformation=[
-            {"crop": "fill", "width": 300, "height": 300, "gravity": "auto"},
+            {"crop": "fill", "width": 300, "height": 300},
             {"fetch_format": "auto", "quality": "auto"}
         ]
     )
@@ -25,7 +26,7 @@ def _thumb_url(public_id):
 def _full_url(public_id):
     return CloudinaryImage(public_id).build_url(
         transformation=[
-            {"crop": "fill", "width": 800, "height": 600, "gravity": "auto"},
+            {"crop": "fill", "width": 800, "height": 600},
             {"fetch_format": "auto", "quality": "auto"}
         ]
     )
@@ -37,6 +38,7 @@ def index():
         .expression(f"folder={GALLERY_FOLDER}")
         .sort_by("created_at", "desc")
         .max_results(MAX_RESULTS)
+        .with_field("tags")
         .execute()
     )
     
@@ -49,7 +51,8 @@ def index():
             items.append({
                 "public_id": pid,
                 "thumb": _thumb_url(pid),
-                "full": _full_url(pid)
+                "full": _full_url(pid),
+                "tags": r.get("tags", [])
             })
     
     return render_template("index.html", items=items, folder=GALLERY_FOLDER)
