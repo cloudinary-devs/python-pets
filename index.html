@@ -1,0 +1,20 @@
+
+{% extends "base.html" %}
+{% block content %}
+  
+  <div class="grid">
+    {% for it in items %}
+    <div class="card">
+      <a href="{{ it.full }}" target="_blank" rel="noopener">
+        <img class="thumb" src="{{ it.thumb }}" alt="{{ it.public_id }}" loading="lazy">
+      </a>
+      <div class="meta">
+        <span title="{{ it.public_id }}">{{ it.public_id.split('/')[-1] }}</span>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% if not items %}
+    <p>No images found. Try uploading some to your Cloudinary folder <code>{{ folder }}</code>.</p>
+  {% endif %}
+{% endblock %}
