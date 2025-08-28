@@ -1,15 +1,79 @@
 
 {% extends "base.html" %}
 {% block content %}
-  
+<style>
+  .tags {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .tag {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 16px;
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: capitalize;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+
+  .tag.name {
+    background: #e3f2fd;
+    color: #1976d2;
+    border: 1px solid #bbdefb;
+  }
+
+  .tag.age {
+    background: #f3e5f5;
+    color: #7b1fa2;
+    border: 1px solid #e1bee7;
+  }
+
+  .tag.breed {
+    background: #e8f5e8;
+    color: #388e3c;
+    border: 1px solid #c8e6c9;
+  }
+
+  .tag.pet {
+    background: #fff3e0;
+    color: #f57c00;
+    border: 1px solid #ffcc02;
+  }
+</style>
   <div class="grid">
     {% for it in items %}
     <div class="card">
       <a href="{{ it.full }}" target="_blank" rel="noopener">
-        <img class="thumb" src="{{ it.thumb }}" alt="{{ it.public_id }}" loading="lazy">
+        <img
+          class="thumb"
+          src="{{ it.thumb }}"
+          srcset="
+            {{ it.thumb | replace('w_400','w_200') }} 200w,
+            {{ it.thumb }} 400w,
+            {{ it.thumb | replace('w_400','w_800') }} 800w"
+          sizes="(max-width: 480px) 200px, (max-width: 900px) 400px, 800px"
+          alt="{{ it.name }}"
+          loading="lazy"
+        >
       </a>
       <div class="meta">
-        <span title="{{ it.public_id }}">{{ it.public_id.split('/')[-1] }}</span>
+        {% if it.tags and it.tags|length > 0 %}
+        <div class="tags">
+          {% for tag in it.tags %}
+            {% if ':' in tag %}
+              {% set key_value = tag.split(':') %}
+              {% if key_value|length == 2 %}
+                <span class="tag {{ key_value[0] }}">{{ key_value[0]|title }}: {{ key_value[1] }}</span>
+              {% endif %}
+            {% else %}
+              <span class="tag">{{ tag }}</span>
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% endif %}
       </div>
     </div>
     {% endfor %}
