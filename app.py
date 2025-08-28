@@ -17,16 +17,14 @@ app = Flask(__name__)
 def _thumb_url(public_id):
     return CloudinaryImage(public_id).build_url(
         transformation=[
-            {"crop": "fill", "width": 300, "height": 300, "gravity": "auto"},
-            {"fetch_format": "auto", "quality": "auto"}
+            {"crop": "fill", "width": 300, "height": 300},
         ]
     )
 
 def _full_url(public_id):
     return CloudinaryImage(public_id).build_url(
         transformation=[
-            {"crop": "fill", "width": 800, "height": 600, "gravity": "auto"},
-            {"fetch_format": "auto", "quality": "auto"}
+            {"crop": "fill", "width": 800, "height": 600},
         ]
     )
 
